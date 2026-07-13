@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+
+:root {
+  --bg: #1F1B16;
+  --surface: #2A241C;
+  --rule: #3D3527;
+  --text: #EDE6D9;
+  --text-muted: #A69C8C;
+  --gold: #D4AF37;
+  --green: #7FA888;
+  --red: #D17862;
+}
+
+:root[data-theme="light"] {
+  --bg: #E4D8B8;
+  --surface: #F7F1DF;
+  --rule: #C9B98C;
+  --text: #2C2416;
+  --text-muted: #7A6C4E;
+  --gold: #8C6D0F;
+  --green: #3F6B47;
+  --red: #8C3624;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hide scrollbars, show on hover */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 2px; }
+
+/* Stamp animation */
+@keyframes stamp-in {
+  0% { transform: rotate(-8deg) scale(1.6); opacity: 0; }
+  60% { transform: rotate(-8deg) scale(0.95); opacity: 1; }
+  80% { transform: rotate(-8deg) scale(1.04); }
+  100% { transform: rotate(-8deg) scale(1); opacity: 1; }
+}
+
+@keyframes stamp-in-reduced {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.stamp-animate {
+  animation: stamp-in 200ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp-animate {
+    animation: stamp-in-reduced 200ms ease forwards;
+  }
+}
+
+/* Focus ring */
+*:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
