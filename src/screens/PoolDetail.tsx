@@ -102,7 +102,7 @@ export default function PoolDetail({ poolId, onBack }: PoolDetailProps) {
 
   if (loading) {
     return (
-      <div style={{ padding: '0 20px 40px', maxWidth: '600px', width: '100%', margin: '0 auto', textAlign: 'center', paddingTop: '100px' }}>
+      <div style={{ padding: '0 16px 32px', maxWidth: '600px', width: '100%', margin: '0 auto', textAlign: 'center', paddingTop: '80px' }}>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: '14px', color: 'var(--text-muted)' }}>Loading pool...</p>
       </div>
     )
@@ -110,7 +110,7 @@ export default function PoolDetail({ poolId, onBack }: PoolDetailProps) {
 
   if (!pool) {
     return (
-      <div style={{ padding: '0 20px 40px', maxWidth: '600px', width: '100%', margin: '0 auto', textAlign: 'center', paddingTop: '100px' }}>
+      <div style={{ padding: '0 16px 32px', maxWidth: '600px', width: '100%', margin: '0 auto', textAlign: 'center', paddingTop: '80px' }}>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: '14px', color: 'var(--text-muted)' }}>Pool not found</p>
         <button
           onClick={onBack}
@@ -131,7 +131,7 @@ export default function PoolDetail({ poolId, onBack }: PoolDetailProps) {
   }
 
   return (
-    <div style={{ padding: '0 20px 40px', maxWidth: '600px', width: '100%', margin: '0 auto' }}>
+    <div style={{ padding: '0 16px 32px', maxWidth: '600px', width: '100%', margin: '0 auto' }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
         <div>

@@ -139,7 +139,7 @@ export default function App() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {/* Theme toggle */}
           <button
             onClick={toggle}
@@ -179,11 +179,11 @@ export default function App() {
                     onClick={() => setScreen('pools')}
                     style={{
                       fontFamily: 'var(--font-sans)',
-                      fontSize: '12px',
+                      fontSize: '11px',
                       fontWeight: 500,
                       letterSpacing: '0.06em',
                       textTransform: 'uppercase',
-                      padding: '7px 16px',
+                      padding: '6px 12px',
                       borderRadius: '8px',
                       border: '1px solid var(--rule)',
                       background: 'transparent',
@@ -197,11 +197,11 @@ export default function App() {
                     onClick={() => setScreen('new-habit')}
                     style={{
                       fontFamily: 'var(--font-sans)',
-                      fontSize: '12px',
+                      fontSize: '11px',
                       fontWeight: 500,
                       letterSpacing: '0.06em',
                       textTransform: 'uppercase',
-                      padding: '7px 16px',
+                      padding: '6px 12px',
                       borderRadius: '8px',
                       border: '1px solid var(--gold)',
                       background: 'var(--gold)',
@@ -217,11 +217,11 @@ export default function App() {
                 onClick={handleLogout}
                 style={{
                   fontFamily: 'var(--font-sans)',
-                  fontSize: '12px',
+                  fontSize: '11px',
                   fontWeight: 500,
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
-                  padding: '7px 16px',
+                  padding: '6px 12px',
                   borderRadius: '8px',
                   border: '1px solid var(--rule)',
                   background: 'transparent',

@@ -11,6 +11,7 @@ export default function Auth({ onAuthSuccess }: AuthProps) {
   const [mode, setMode] = useState<AuthMode>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -49,15 +50,15 @@ export default function Auth({ onAuthSuccess }: AuthProps) {
   }
 
   return (
-    <div style={{ padding: '0 20px 40px', maxWidth: '400px', width: '100%', margin: '0 auto', paddingTop: '60px' }}>
-      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-        <div style={{ fontSize: '48px', transform: 'rotate(-8deg)', display: 'inline-block', userSelect: 'none', marginBottom: '16px' }}>
+    <div style={{ padding: '0 16px 32px', maxWidth: '400px', width: '100%', margin: '0 auto', paddingTop: '40px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+        <div style={{ fontSize: '40px', transform: 'rotate(-8deg)', display: 'inline-block', userSelect: 'none', marginBottom: '12px' }}>
           ◈
         </div>
-        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '28px', fontWeight: 500, color: 'var(--text)', margin: '0 0 8px' }}>
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: 500, color: 'var(--text)', margin: '0 0 6px' }}>
           {mode === 'login' ? 'Welcome Back' : 'Join StakeHabit'}
         </h2>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '12px', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>
           {mode === 'login' ? 'Sign in to access your stakes and pools' : 'Create an account to start staking'}
         </p>
       </div>
@@ -83,17 +84,38 @@ export default function Auth({ onAuthSuccess }: AuthProps) {
           <label style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
             Password
           </label>
-          <input
-            type="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-            minLength={6}
-            style={inputStyle}
-            placeholder="••••••••"
-            onFocus={e => (e.target as HTMLInputElement).style.borderColor = 'var(--gold)'}
-            onBlur={e => (e.target as HTMLInputElement).style.borderColor = 'var(--rule)'}
-          />
+          <div style={{ position: 'relative' }}>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              minLength={6}
+              style={{ ...inputStyle, paddingRight: '44px' }}
+              placeholder="••••••••"
+              onFocus={e => (e.target as HTMLInputElement).style.borderColor = 'var(--gold)'}
+              onBlur={e => (e.target as HTMLInputElement).style.borderColor = 'var(--rule)'}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: 'absolute',
+                right: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--text-muted)',
+                cursor: 'pointer',
+                padding: '4px',
+                fontSize: '12px',
+                fontFamily: 'var(--font-sans)',
+              }}
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
         </div>
 
         {error && (

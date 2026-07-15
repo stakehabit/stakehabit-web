@@ -61,7 +61,7 @@ export default function CreatePool({ onCancel, onCreate }: CreatePoolProps) {
   }
 
   return (
-    <div style={{ padding: '0 20px 40px', maxWidth: '600px', width: '100%', margin: '0 auto' }}>
+    <div style={{ padding: '0 16px 32px', maxWidth: '600px', width: '100%', margin: '0 auto' }}>
       {/* Step indicator */}
       <div style={{ display: 'flex', gap: '6px', marginBottom: '28px' }}>
         {STEPS.map((s, i) => (

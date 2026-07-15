@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import HabitCard from '../components/HabitCard'
 
 const makeStreak = (total: number, filled: number) =>
@@ -36,6 +37,8 @@ const HABITS = [
   },
 ]
 
+type Filter = 'all' | 'active' | 'completed' | 'forfeited'
+
 interface DashboardProps {
   onSelectHabit: (id: string) => void
   onNewHabit: () => void
@@ -43,6 +46,16 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ onSelectHabit, onNewHabit, isFirstTime = false }: DashboardProps) {
+  const [filter, setFilter] = useState<Filter>('all')
+
+  const filteredHabits = HABITS.filter(habit => {
+    if (filter === 'all') return true
+    if (filter === 'active') return habit.status === 'staked'
+    if (filter === 'completed') return habit.status === 'fulfilled'
+    if (filter === 'forfeited') return habit.status === 'forfeited'
+    return true
+  })
+
   const active = HABITS.filter(h => h.status === 'staked')
   const past = HABITS.filter(h => h.status !== 'staked')
 
@@ -80,47 +93,46 @@ export default function Dashboard({ onSelectHabit, onNewHabit, isFirstTime = fal
   }
 
   return (
-    <div style={{ padding: '0 20px 40px', maxWidth: '600px', width: '100%', margin: '0 auto' }}>
-      {active.length > 0 && (
-        <section style={{ marginBottom: '32px' }}>
-          <p style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: '11px',
-            fontWeight: 500,
-            letterSpacing: '0.1em',
-            color: 'var(--text-muted)',
-            textTransform: 'uppercase',
-            margin: '0 0 12px',
-          }}>
-            Active Stakes
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {active.map(h => (
-              <HabitCard key={h.id} {...h} onClick={() => onSelectHabit(h.id)} />
-            ))}
-          </div>
-        </section>
-      )}
+    <div style={{ padding: '0 16px 32px', maxWidth: '600px', width: '100%', margin: '0 auto' }}>
+      {/* Filter tabs */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
+        {(['all', 'active', 'completed', 'forfeited'] as Filter[]).map(f => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: '12px',
+              fontWeight: 500,
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              border: filter === f ? '1px solid var(--gold)' : '1px solid var(--rule)',
+              background: filter === f ? 'var(--gold)' : 'transparent',
+              color: filter === f ? 'var(--bg)' : 'var(--text-muted)',
+              cursor: 'pointer',
+              transition: 'all 0.15s',
+            }}
+          >
+            {f}
+          </button>
+        ))}
+      </div>
 
-      {past.length > 0 && (
-        <section>
-          <p style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: '11px',
-            fontWeight: 500,
-            letterSpacing: '0.1em',
-            color: 'var(--text-muted)',
-            textTransform: 'uppercase',
-            margin: '0 0 12px',
-          }}>
-            Past Stakes
+      {/* Habits list */}
+      {filteredHabits.length > 0 ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {filteredHabits.map(h => (
+            <HabitCard key={h.id} {...h} onClick={() => onSelectHabit(h.id)} />
+          ))}
+        </div>
+      ) : (
+        <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: '14px', color: 'var(--text-muted)', margin: 0 }}>
+            No habits found for this filter
           </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {past.map(h => (
-              <HabitCard key={h.id} {...h} onClick={() => onSelectHabit(h.id)} />
-            ))}
-          </div>
-        </section>
+        </div>
       )}
     </div>
   )

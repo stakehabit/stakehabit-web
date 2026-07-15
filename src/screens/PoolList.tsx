@@ -31,14 +31,14 @@ export default function PoolList({ onSelectPool, onCreatePool }: PoolListProps) 
 
   if (loading) {
     return (
-      <div style={{ padding: '0 20px 40px', maxWidth: '600px', width: '100%', margin: '0 auto', textAlign: 'center', paddingTop: '100px' }}>
+      <div style={{ padding: '0 16px 32px', maxWidth: '600px', width: '100%', margin: '0 auto', textAlign: 'center', paddingTop: '80px' }}>
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: '14px', color: 'var(--text-muted)' }}>Loading pools...</p>
       </div>
     )
   }
 
   return (
-    <div style={{ padding: '0 20px 40px', maxWidth: '600px', width: '100%', margin: '0 auto' }}>
+    <div style={{ padding: '0 16px 32px', maxWidth: '600px', width: '100%', margin: '0 auto' }}>
       {/* Header */}
       <div style={{ marginBottom: '24px' }}>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: 500, color: 'var(--text)', margin: '0 0 8px' }}>
