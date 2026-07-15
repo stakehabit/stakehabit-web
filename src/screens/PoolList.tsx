@@ -5,9 +5,10 @@ import type { Pool } from '../lib/poolStorage'
 interface PoolListProps {
   onSelectPool: (id: number) => void
   onCreatePool: () => void
+  refreshTrigger?: number
 }
 
-export default function PoolList({ onSelectPool, onCreatePool }: PoolListProps) {
+export default function PoolList({ onSelectPool, onCreatePool, refreshTrigger }: PoolListProps) {
   const [pools, setPools] = useState<Pool[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -24,7 +25,7 @@ export default function PoolList({ onSelectPool, onCreatePool }: PoolListProps) 
       }
     }
     loadPools()
-  }, [])
+  }, [refreshTrigger])
 
   const activePools = pools.filter(p => p.status === 'active')
   const completedPools = pools.filter(p => p.status === 'completed')

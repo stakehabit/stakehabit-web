@@ -34,6 +34,7 @@ export default function App() {
   const [selectedPoolId, setSelectedPoolId] = useState<number | null>(null)
   const [showStakeSuccess, setShowStakeSuccess] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [poolRefreshTrigger, setPoolRefreshTrigger] = useState(0)
 
   const handleAuthSuccess = () => {
     setIsAuthenticated(true)
@@ -74,6 +75,7 @@ export default function App() {
   }
 
   const handlePoolCreated = () => {
+    setPoolRefreshTrigger(prev => prev + 1)
     setScreen('pools')
   }
 
@@ -263,6 +265,7 @@ export default function App() {
           <PoolList
             onSelectPool={handleSelectPool}
             onCreatePool={() => setScreen('create-pool')}
+            refreshTrigger={poolRefreshTrigger}
           />
         )}
         {screen === 'pool-detail' && (
