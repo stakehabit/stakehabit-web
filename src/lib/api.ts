@@ -132,6 +132,7 @@ interface CreatePoolRequest {
   winner_split: number
   charity: string
   creator_address: string
+  status?: string
 }
 
 export const api = new ApiClient()

@@ -37,12 +37,14 @@ export async function getPools(): Promise<Pool[]> {
           const participants = await api.getPoolParticipants(pool.id.toString()) as any[]
           return {
             ...pool,
+            status: pool.status || 'active',
             currentParticipants: participants.length,
             days: Array.from({ length: pool.duration }, () => false),
           }
         } catch {
           return {
             ...pool,
+            status: pool.status || 'active',
             currentParticipants: pool.participant_count || 0,
             days: Array.from({ length: pool.duration }, () => false),
           }
@@ -61,6 +63,7 @@ export async function getPool(id: number): Promise<Pool | undefined> {
     const pool = await api.getPool(id.toString())
     return {
       ...pool,
+      status: pool.status || 'active',
       currentParticipants: pool.participant_count || 0,
       days: Array.from({ length: pool.duration }, () => false),
     }
@@ -82,9 +85,11 @@ export async function savePool(pool: Omit<Pool, 'id' | 'created_at'>): Promise<P
       winner_split: pool.winner_split,
       charity: pool.charity,
       creator_address: pool.creator_address,
+      status: pool.status,
     })
     return {
       ...created,
+      status: pool.status || 'active',
       currentParticipants: 1,
       days: Array.from({ length: pool.duration }, () => false),
     }
