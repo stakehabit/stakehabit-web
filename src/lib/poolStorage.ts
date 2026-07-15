@@ -1,4 +1,4 @@
-import { api } from './api'
+import { api } from "./api"
 
 export interface Pool {
   id: number
@@ -30,52 +30,56 @@ export interface Participant {
 
 export async function getPools(): Promise<Pool[]> {
   try {
-    const pools = await api.getPools() as any[]
+    const pools = (await api.getPools()) as any[]
     const poolsWithCounts = await Promise.all(
       pools.map(async (pool: any) => {
         try {
-          const participants = await api.getPoolParticipants(pool.id.toString()) as any[]
+          const participants = (await api.getPoolParticipants(
+            pool.id.toString(),
+          )) as any[]
           return {
             ...pool,
-            status: pool.status || 'active',
+            status: pool.status || "active",
             currentParticipants: participants.length,
             days: Array.from({ length: pool.duration }, () => false),
           }
         } catch {
           return {
             ...pool,
-            status: pool.status || 'active',
+            status: pool.status || "active",
             currentParticipants: pool.participant_count || 0,
             days: Array.from({ length: pool.duration }, () => false),
           }
         }
-      })
+      }),
     )
     return poolsWithCounts
   } catch (error) {
-    console.error('Failed to fetch pools:', error)
+    console.error("Failed to fetch pools:", error)
     return []
   }
 }
 
 export async function getPool(id: number): Promise<Pool | undefined> {
   try {
-    const pool = await api.getPool(id.toString())
+    const pool = (await api.getPool(id.toString())) as any
     return {
       ...pool,
-      status: pool.status || 'active',
+      status: pool.status || "active",
       currentParticipants: pool.participant_count || 0,
       days: Array.from({ length: pool.duration }, () => false),
     }
   } catch (error) {
-    console.error('Failed to fetch pool:', error)
+    console.error("Failed to fetch pool:", error)
     return undefined
   }
 }
 
-export async function savePool(pool: Omit<Pool, 'id' | 'created_at'>): Promise<Pool> {
+export async function savePool(
+  pool: Omit<Pool, "id" | "created_at">,
+): Promise<Pool> {
   try {
-    const created = await api.createPool({
+    const created = (await api.createPool({
       title: pool.title,
       description: pool.description,
       duration: pool.duration,
@@ -86,51 +90,66 @@ export async function savePool(pool: Omit<Pool, 'id' | 'created_at'>): Promise<P
       charity: pool.charity,
       creator_address: pool.creator_address,
       status: pool.status,
-    })
+    })) as any
     return {
       ...created,
-      status: pool.status || 'active',
+      status: pool.status || "active",
       currentParticipants: 1,
       days: Array.from({ length: pool.duration }, () => false),
     }
   } catch (error) {
-    console.error('Failed to create pool:', error)
+    console.error("Failed to create pool:", error)
     throw error
   }
 }
 
-export async function joinPool(poolId: number, walletAddress: string): Promise<void> {
+export async function joinPool(
+  poolId: number,
+  walletAddress: string,
+): Promise<void> {
   try {
     await api.joinPool(poolId.toString(), walletAddress)
   } catch (error) {
-    console.error('Failed to join pool:', error)
+    console.error("Failed to join pool:", error)
     throw error
   }
 }
 
-export async function getPoolParticipants(poolId: number): Promise<Participant[]> {
+export async function getPoolParticipants(
+  poolId: number,
+): Promise<Participant[]> {
   try {
-    return await api.getPoolParticipants(poolId.toString())
+    return (await api.getPoolParticipants(poolId.toString())) as Participant[]
   } catch (error) {
-    console.error('Failed to fetch participants:', error)
+    console.error("Failed to fetch participants:", error)
     return []
   }
 }
 
-export async function poolCheckin(poolId: number, walletAddress: string, checkInDate: string): Promise<void> {
+export async function poolCheckin(
+  poolId: number,
+  walletAddress: string,
+  checkInDate: string,
+): Promise<void> {
   try {
     await api.poolCheckin(poolId.toString(), walletAddress, checkInDate)
   } catch (error) {
-    console.error('Failed to check in:', error)
+    console.error("Failed to check in:", error)
     throw error
   }
 }
 
-export async function getPoolCheckins(poolId: number, walletAddress: string): Promise<any[]> {
+export async function getPoolCheckins(
+  poolId: number,
+  walletAddress: string,
+): Promise<any[]> {
   try {
-    return await api.getPoolCheckins(poolId.toString(), walletAddress)
+    return (await api.getPoolCheckins(
+      poolId.toString(),
+      walletAddress,
+    )) as any[]
   } catch (error) {
-    console.error('Failed to fetch check-ins:', error)
+    console.error("Failed to fetch check-ins:", error)
     return []
   }
 }

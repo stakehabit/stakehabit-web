@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000"
 
 interface AuthResponse {
   access_token: string
@@ -12,18 +12,20 @@ class ApiClient {
     this.token = token
   }
 
-  private async request<T>(
+  private async request<T,>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
   ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-      ...options.headers,
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      ...Object.fromEntries(
+        options.headers ? new Headers(options.headers).entries() : [],
+      ),
     }
 
     if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`
+      headers["Authorization"] = `Bearer ${this.token}`
     }
 
     const response = await fetch(url, {
@@ -34,10 +36,12 @@ class ApiClient {
     if (!response.ok) {
       if (response.status === 401) {
         this.setToken(null)
-        throw new Error('Unauthorized - Please login again')
+        throw new Error("Unauthorized - Please login again")
       }
-      const error = await response.json().catch(() => ({ detail: 'Unknown error' }))
-      throw new Error(error.detail || 'Request failed')
+      const error = await response
+        .json()
+        .catch(() => ({ detail: "Unknown error" }))
+      throw new Error(error.detail || "Request failed")
     }
 
     return response.json()
@@ -45,26 +49,26 @@ class ApiClient {
 
   // Auth
   async login(email: string, password: string): Promise<AuthResponse> {
-    return this.request<AuthResponse>('/login', {
-      method: 'POST',
+    return this.request<AuthResponse>("/login", {
+      method: "POST",
       body: JSON.stringify({ email, password }),
     })
   }
 
   async register(email: string, password: string): Promise<AuthResponse> {
-    return this.request<AuthResponse>('/register', {
-      method: 'POST',
+    return this.request<AuthResponse>("/register", {
+      method: "POST",
       body: JSON.stringify({ email, password }),
     })
   }
 
   async getMe() {
-    return this.request('/me')
+    return this.request("/me")
   }
 
   // Pools
   async getPools() {
-    return this.request('/pools')
+    return this.request("/pools")
   }
 
   async getPool(poolId: string) {
@@ -72,15 +76,15 @@ class ApiClient {
   }
 
   async createPool(data: CreatePoolRequest) {
-    return this.request('/pools', {
-      method: 'POST',
+    return this.request("/pools", {
+      method: "POST",
       body: JSON.stringify(data),
     })
   }
 
   async joinPool(poolId: string, walletAddress: string) {
     return this.request(`/pools/${poolId}/join`, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({ wallet_address: walletAddress }),
     })
   }
@@ -89,9 +93,13 @@ class ApiClient {
     return this.request(`/pools/${poolId}/participants`)
   }
 
-  async poolCheckin(poolId: string, walletAddress: string, checkInDate: string) {
+  async poolCheckin(
+    poolId: string,
+    walletAddress: string,
+    checkInDate: string,
+  ) {
     return this.request(`/pools/${poolId}/checkin`, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({
         wallet_address: walletAddress,
         check_in_date: checkInDate,
@@ -105,19 +113,19 @@ class ApiClient {
 
   // Habits
   async getHabits() {
-    return this.request('/habits')
+    return this.request("/habits")
   }
 
   async createHabit(data: any) {
-    return this.request('/habits', {
-      method: 'POST',
+    return this.request("/habits", {
+      method: "POST",
       body: JSON.stringify(data),
     })
   }
 
   async habitCheckin(habitId: string) {
     return this.request(`/habits/${habitId}/checkins`, {
-      method: 'POST',
+      method: "POST",
     })
   }
 }
