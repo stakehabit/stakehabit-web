@@ -238,39 +238,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* Nav tabs (dashboard only) */}
-      {screen === 'dashboard' && (
-        <nav style={{
-          borderBottom: '1px solid var(--rule)',
-          padding: '0 20px',
-          display: 'flex',
-          gap: '0',
-          maxWidth: '600px',
-          width: '100%',
-          margin: '0 auto',
-        }}>
-          {['All', 'Active', 'Completed', 'Forfeited'].map(tab => (
-            <button
-              key={tab}
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: '12px',
-                letterSpacing: '0.04em',
-                color: tab === 'All' ? 'var(--text)' : 'var(--text-muted)',
-                background: 'transparent',
-                border: 'none',
-                borderBottom: tab === 'All' ? '2px solid var(--gold)' : '2px solid transparent',
-                padding: '10px 14px',
-                cursor: 'pointer',
-                marginBottom: '-1px',
-              }}
-            >
-              {tab}
-            </button>
-          ))}
-        </nav>
-      )}
-
       {/* Main content */}
       <main style={{ flex: 1, paddingTop: '24px', display: 'flex', flexDirection: 'column' }}>
         {screen === 'auth' && <Auth onAuthSuccess={handleAuthSuccess} />}
