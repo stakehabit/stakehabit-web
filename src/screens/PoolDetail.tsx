@@ -37,7 +37,7 @@ export default function PoolDetail({ poolId, onBack }: PoolDetailProps) {
           const daysArray = Array.from({ length: poolData.duration }, () => false)
           checkinsData.forEach((checkin: any) => {
             const checkinDate = new Date(checkin.check_in_date)
-            const startDate = new Date(poolData.created_at)
+            const startDate = new Date(poolData.created_at.split('T')[0])
             const dayIndex = Math.floor((checkinDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
             if (dayIndex >= 0 && dayIndex < daysArray.length) {
               daysArray[dayIndex] = true
@@ -67,18 +67,22 @@ export default function PoolDetail({ poolId, onBack }: PoolDetailProps) {
   }, [poolId, walletAddress])
 
   const handleCheckin = async () => {
-    if (!poolId) return
-    
+    if (!poolId || !pool) return
+
     try {
       const today = new Date().toISOString().split('T')[0]
       await poolCheckin(poolId, walletAddress, today)
       setCheckedInToday(true)
-      setDays(prev => {
-        const next = [...prev]
-        const idx = next.findIndex(d => !d)
-        if (idx !== -1) next[idx] = true
-        return next
-      })
+      const checkinDate = new Date(today)
+      const startDate = new Date(pool.created_at.split('T')[0])
+      const dayIndex = Math.floor((checkinDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+      if (dayIndex >= 0 && dayIndex < pool.duration) {
+        setDays(prev => {
+          const next = [...prev]
+          next[dayIndex] = true
+          return next
+        })
+      }
     } catch (error) {
       alert('Failed to check in: ' + (error as Error).message)
     }
@@ -86,19 +90,46 @@ export default function PoolDetail({ poolId, onBack }: PoolDetailProps) {
 
   const handleJoin = async () => {
     if (!poolId) return
-    
+
     try {
       await joinPool(poolId, walletAddress)
       setJoined(true)
+
+      const [updatedPool, updatedParticipants, updatedCheckins] = await Promise.all([
+        getPool(poolId),
+        getPoolParticipants(poolId),
+        getPoolCheckins(poolId, walletAddress),
+      ])
+
+      if (updatedPool) {
+        setPool(updatedPool)
+        const daysArray = Array.from({ length: updatedPool.duration }, () => false)
+        updatedCheckins.forEach((checkin: any) => {
+          const checkinDate = new Date(checkin.check_in_date)
+          const startDate = new Date(updatedPool.created_at.split('T')[0])
+          const dayIndex = Math.floor((checkinDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
+          if (dayIndex >= 0 && dayIndex < daysArray.length) {
+            daysArray[dayIndex] = true
+          }
+        })
+        setDays(daysArray)
+      }
+
+      setParticipants(updatedParticipants)
+
+      const today = new Date().toISOString().split('T')[0]
+      setCheckedInToday(updatedCheckins.some((c: any) => c.check_in_date === today))
     } catch (error) {
       alert('Failed to join pool: ' + (error as Error).message)
     }
   }
 
   const completed = days.filter(Boolean).length
-  const totalPot = pool ? parseFloat(pool.stake_amount) * (pool.currentParticipants || 0) : 0
+  const totalPot = pool ? parseFloat(pool.stake_amount) * (participants.length || 0) : 0
   const activeParticipants = participants.filter(p => p.status === 'active').length
   const winnerShare = activeParticipants > 0 ? Math.round(totalPot * (pool?.winner_split || 60) / 100 / activeParticipants) : 0
+  const todayStr = new Date().toISOString().split('T')[0]
+  const currentDayIndex = pool ? Math.floor((new Date(todayStr).getTime() - new Date(pool.created_at.split('T')[0]).getTime()) / (1000 * 60 * 60 * 24)) : 0
 
   if (loading) {
     return (
@@ -161,7 +192,7 @@ export default function PoolDetail({ poolId, onBack }: PoolDetailProps) {
           {days.map((checked, i) => (
             <div
               key={i}
-              title={`Day ${i + 1}: ${checked ? 'completed' : 'missed'}`}
+              title={`Day ${i + 1}: ${checked ? 'completed' : i > currentDayIndex ? 'upcoming' : 'missed'}`}
               style={{
                 width: '10px',
                 height: '10px',

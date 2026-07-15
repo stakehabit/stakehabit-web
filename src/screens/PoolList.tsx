@@ -126,7 +126,7 @@ export default function PoolList({ onSelectPool, onCreatePool, refreshTrigger }:
 
                   <div style={{ marginTop: '14px' }}>
                     <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-                      {pool.days.slice(0, 14).map((checked, i) => (
+                      {(pool.days || []).slice(0, Math.min(pool.duration, 21)).map((checked, i) => (
                         <div
                           key={i}
                           style={{

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import StakeAmountSlider from '../components/StakeAmountSlider'
 import CharityPicker from '../components/CharityPicker'
-import { savePool } from '../lib/poolStorage'
+import { savePool, joinPool } from '../lib/poolStorage'
 import { api } from '../lib/api'
 
 interface CreatePoolProps {
@@ -299,8 +299,7 @@ export default function CreatePool({ onCancel, onCreate }: CreatePoolProps) {
           onClick={async () => {
             if (step === 'confirm') {
               try {
-                // Save the pool via API
-                await savePool({
+                const pool = await savePool({
                   title,
                   description,
                   duration,
@@ -310,8 +309,9 @@ export default function CreatePool({ onCancel, onCreate }: CreatePoolProps) {
                   winner_split: winnerSplit,
                   charity: charity || 'givewell',
                   status: 'active',
-                  creator_address: 'GBXT...FQNK', // Would come from wallet
+                  creator_address: 'GBXT...FQNK',
                 })
+                await joinPool(pool.id, 'GBXT...FQNK')
                 onCreate()
               } catch (error) {
                 alert('Failed to create pool: ' + (error as Error).message)

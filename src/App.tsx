@@ -269,7 +269,10 @@ export default function App() {
           />
         )}
         {screen === 'pool-detail' && (
-          <PoolDetail poolId={selectedPoolId || undefined} onBack={() => setScreen('pools')} />
+          <PoolDetail poolId={selectedPoolId || undefined} onBack={() => {
+            setPoolRefreshTrigger(prev => prev + 1)
+            setScreen('pools')
+          }} />
         )}
         {screen === 'create-pool' && (
           <CreatePool

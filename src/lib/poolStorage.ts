@@ -30,12 +30,26 @@ export interface Participant {
 
 export async function getPools(): Promise<Pool[]> {
   try {
-    const pools = await api.getPools()
-    return pools.map((pool: any) => ({
-      ...pool,
-      currentParticipants: pool.participant_count || 0,
-      days: Array.from({ length: pool.duration }, () => false), // Will be populated from check-ins
-    }))
+    const pools = await api.getPools() as any[]
+    const poolsWithCounts = await Promise.all(
+      pools.map(async (pool: any) => {
+        try {
+          const participants = await api.getPoolParticipants(pool.id.toString()) as any[]
+          return {
+            ...pool,
+            currentParticipants: participants.length,
+            days: Array.from({ length: pool.duration }, () => false),
+          }
+        } catch {
+          return {
+            ...pool,
+            currentParticipants: pool.participant_count || 0,
+            days: Array.from({ length: pool.duration }, () => false),
+          }
+        }
+      })
+    )
+    return poolsWithCounts
   } catch (error) {
     console.error('Failed to fetch pools:', error)
     return []
